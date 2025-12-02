@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> TaskZen | Beautiful To-Do App</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body
+    class="font-inter min-h-screen p-4 md:p-6 bg-[url('https://images.unsplash.com/photo-1764588029885-d115de3bda1e?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center bg-fixed bg-no-repeat">
+</body>
+<!-- Theme Toggle -->
+<button id="theme-toggle"
+    class="fixed top-4 right-4 z-50 w-12 h-12 rounded-full bg-indigo-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:rotate-12 flex items-center justify-center">
+    <i id="theme-icon" class="fas fa-moon text-lg"></i>
+</button>
+
+<!-- Main Container -->
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div id="app-header"
+        class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-2xl overflow-hidden mb-8">
+        <div class="p-8 md:p-10 text-center">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <i class="fas fa-leaf text-3xl text-white/90"></i>
+                <h1 class="text-3xl md:text-4xl font-bold text-white">ZenFlow Tasks</h1>
+            </div>
+            <p class="text-white/80 text-lg">Find your focus, one task at a time</p>
+        </div>
+    </div>
+
+    <!-- App Card -->
+    <div id="app-card"
+        class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+        <!-- Search & Filter Bar -->
+        <div class="p-6 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="search-input" placeholder="Search tasks..."
+                        class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white">
+                </div>
+                <select id="priority-filter"
+                    class="px-4 py-3 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 text-slate-900 dark:text-white">
+                    <option value="">All Priorities</option>
+                    <option value="High">High Priority</option>
+                    <option value="Medium">Medium Priority</option>
+                    <option value="Low">Low Priority</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Add Task Form -->
+        <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <input type="text" id="todo-input" placeholder="What needs to be done?"
+                    class="md:col-span-5 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+
+                <select id="priority"
+                    class="md:col-span-2 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                </select>
+
+                <input type="date" id="due-date"
+                    class="md:col-span-2 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white dark:bg-slate-700 text-slate-900 dark:text-white">
+
+                <button id="add-button"
+                    class="md:col-span-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Task</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Tasks Container -->
+        <div class="p-6 max-h-[500px] overflow-y-auto">
+            <ul id="todo-list" class="space-y-4">
+                <!-- Loading State -->
+                <li id="loading-state" class="text-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4">
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400">Loading your tasks...</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Stats Footer -->
+        <div class="bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700 p-6">
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div>
+                    <div id="total-tasks" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">0</div>
+                    <div class="text-sm text-slate-500 dark:text-slate-400">Total Tasks</div>
+                </div>
+                <div>
+                    <div id="completed-tasks" class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">0
+                    </div>
+                    <div class="text-sm text-slate-500 dark:text-slate-400">Completed</div>
+                </div>
+                <div>
+                    <div id="pending-tasks" class="text-2xl font-bold text-amber-600 dark:text-amber-400">0</div>
+                    <div class="text-sm text-slate-500 dark:text-slate-400">Pending</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="app.js"></script>
+</body>
+
+</html>
